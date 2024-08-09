@@ -1,16 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { ConfigService } from '@nestjs/config';
 import { CreateFlowerDto } from './dto/flowers.dto';
+import { EnumAppMode } from '../types';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class FlowersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   findAll() {
-    return this.prisma.flower.findMany();
+    console.log(this.configService.get<EnumAppMode>('MODE'));
+    return this.prismaService.flower.findMany();
   }
 
   create(dto: CreateFlowerDto) {
-    return this.prisma.flower.create({ data: dto });
+    return this.prismaService.flower.create({ data: dto });
   }
 }
